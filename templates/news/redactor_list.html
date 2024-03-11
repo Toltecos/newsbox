@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+  
+  <section class="tc-popular-posts-blog">
+    <div class="container">
+      <div class="content-widgets pt-30 pb-30">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+          Redactor List
+          <i class="la la-angle-right ms-1"></i>
+          {% if user.is_authenticated %}
+            <a class="btn btn-sm btn-success" href="{% url 'news:redactor-create' %}">
+              + Add Redactor
+            </a>
+          {% endif %}
+        </p>
+          {% if redactor_list %}
+          <table class="table">
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>years_of_experience</th>
+              <th>Update</th>
+              <th>Delete</th>
+            </tr>
+            {% for redactor in redactor_list %}
+              <tr>
+                <td>{{ redactor.id }}</td>
+                <td><a href="{% url "news:redactor-detail" redactor.id %}">{{ redactor.username }} {% if user == redactor %} (Me){% endif %}</a></td>
+                <td>{{ redactor.first_name }}</td>
+                <td>{{ redactor.last_name }}</td>
+                <td>{{ redactor.years_of_experience }}</td>
+                <td>
+                  <a style="color: #198754" href="{% url 'news:redactor-update' pk=redactor.id %}">
+                    Update
+                  </a>
+                </td>
+                <td>
+                  <a style="color: #ed3410"
+                     href="{% url 'news:redactor-delete' pk=redactor.id %}">
+                    Delete
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        {% else %}
+          <p>There are no redactors!</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  
+{% endblock %}

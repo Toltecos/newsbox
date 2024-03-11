@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>newsBox - {{ news.title|title }}</title>
+{% endblock %}
+
+{% block content %}
+  <section class="tc-main-post-style1 pb-50">
+    <div class="container">
+      <div class="tc-main-post-title pt-30 pb-30">
+        <div class="row">
+          <p class="mb-15">
+            <span class="text-uppercase">{{ news.topic.name }}</span>
+            <i class="la la-angle-right ms-1"></i>
+            <span class="me-40">
+              <i class="la la-calendar me-1"></i>{{ news.published_date|date:"d F Y" }}
+            </span>
+            {% if user.is_authenticated and user in news.publishers.all %}
+              <a class="btn btn-success btn-sm" href="{% url 'news:news-update' pk=news.id %}">
+                Update
+              </a>
+              <a class="btn btn-danger btn-sm" href="{% url 'news:news-delete' pk=news.id %}">
+                Delete
+              </a>
+            {% endif %}
+          </p>
+          <h2 class="title">{{ news.title|title }}</h2>
+        </div>
+      </div>
+      <div class="tc-main-post-img img-cover">
+        <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+      </div>
+      <div class="tc-main-post-content color-000">
+        <div class="row">
+          <div class="col-lg-1">
+          </div>
+          <div class="col-lg-11 info-text sm-content-width mt-40">
+            {% if news.content %}
+              {{ news.content|linebreaksbr }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== start author info ====== -->
+  <section class="tc-author-info-style1 pb-60">
+    <div class="container">
+      <div class="tc-author-card">
+        <div class="content mt-30 p-30 d-block d-lg-flex bg-gray1">
+          {% for author in news.publishers.all %}
+            <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
+              <img src="/static/img/colums/{{ author.username }}.png" alt="">
+            </div>
+            <div class="info">
+              <h5 class="title fsz-24px fw-bold">{{ author.first_name|title }} {{ author.last_name|title }}</h5>
+              <small class="fsz-12px color-main text-uppercase">{{ news.topic }} topic editor</small>
+              <div class="text fsz-15px color-666 mt-20">
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum sed ut perspiciatis unde. Lorem ispum dolor sit amet prodigues ametalia
+              </div>
+              <div class="social-links mt-20 fsz-19px">
+                <a href="#" class="me-15"><i class="la la-twitter"></i></a>
+                <a href="#" class="me-15"><i class="la la-facebook-f"></i></a>
+                <a href="#" class="me-15"><i class="la la-instagram"></i></a>
+                <a href="#"><i class="la la-youtube"></i></a>
+              </div>
+            </div>
+          {% empty %}
+            <p>No authors!</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== end author info ====== -->
+
+  {% if related_news|length > 2 %}
+  <section class="tc-main-post-style1 pb-60">
+    <div class="container">
+      <div class="content pt-30 pb-30">
+        <p class="color-000 text-uppercase mb-30 ltspc-1"> Related News </p>
+        <div class="tc-post-grid-default">
+          <div class="tc-popular-posts-blog-slider9 tc-slider-style1">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+              
+                {% for news in related_news %}
+                <div class="swiper-slide">
+                  <div class="item">
+                    <div class="img img-cover th-180">
+                      <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+                    </div>
+                    <div class="content pt-20">
+                      <a href="{% url "news:topic-news-list" topic_pk=news.topic.id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ news.topic|title }}</a>
+                      <h4 class="title ltspc--1 mb-10">
+                        <a href="{% url "news:news-detail" news.id %}">
+                          {{ news.title|title }}
+                        </a>
+                      </h4>
+                      <div class="text color-666">
+                        {{ news.content|truncatewords:7 }}
+                      </div>
+                      <div class="meta-bot lh-1 mt-20">
+                        <ul class="d-flex">
+                          <li class="date me-5">
+                            <a href="#"><i class="la la-calendar me-2"></i>
+                             {{ news.published_date|date:"d F Y" }}
+                            </a>
+                          </li>
+                          <!--<li class="comment">
+                            <a href="#"><i class="la la-comment me-2"></i> 2</a>
+                          </li>-->
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+
+              </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+  
+{% endblock %}

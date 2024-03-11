@@ -1,0 +1,37 @@
+{% load query_transform %}
+
+<div class="pagination style-1 color-main justify-content-center mt-60">   
+  {% if is_paginated %}  
+    {% if page_obj.has_previous %}
+      <a href="?{% query_transform request page=page_obj.previous_page_number %}">
+        <span class="text text-uppercase"><i class="la la-angle-left"></i> prev</span>
+      </a>
+      {% if page_obj.number > 3 %}
+        <a href="?{% query_transform request page=1 %}"><span>1</span></a>
+        {% if page_obj.number > 4 %}
+          <a><span>...</span></a>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="active"><span>{{ num }}</span></a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?{% query_transform request page=num %}"><span>{{ num }}</span></a>
+      {% endif %}
+    {% endfor %}
+    
+    {% if page_obj.has_next %}
+      {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+        <a><span>...</span></a>
+        <a href="?{% query_transform request page=page_obj.paginator.num_pages %}"><span>{{ page_obj.paginator.num_pages }}</span></a>
+      {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+        <a href="?{% query_transform request page=page_obj.paginator.num_pages %}"><span>{{ page_obj.paginator.num_pages }}</span></a>
+      {% endif %}
+        <a href="?{% query_transform request page=page_obj.next_page_number %}">
+          <span class="text text-uppercase">next <i class="la la-angle-right"></i> </span>
+        </a>
+    {% endif %}  
+  {% endif %}
+</div>

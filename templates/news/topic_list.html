@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+  <section class="tc-popular-posts-blog">
+    <div class="container">
+      <div class="content-widgets pt-30 pb-30">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+          Topic List
+          <i class="la la-angle-right ms-1"></i>
+          {% if user.is_authenticated %}
+            <a class="btn btn-sm btn-success" href="{% url 'news:topic-create' %}">
+              + Add Topic
+            </a>
+          {% endif %}
+        </p>
+        {% if topic_list %}
+          <table class="table">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Update</th>
+              <th>Delete</th>
+            </tr>
+            {% for topic in topic_list %}
+              <tr>
+                <td>
+                  {{ topic.id }}
+                </td>
+                <td>
+                  {{ topic.name }}
+                </td>
+                <td>
+                  <a style="color: #198754" href="{% url 'news:topic-update' pk=topic.id %}">
+                    Update
+                  </a>
+                </td>
+                <td>
+                  <a style="color: #ed3410"
+                     href="{% url 'news:topic-delete' pk=topic.id %}">
+                    Delete
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        {% else %}
+          <p>There are no topics!</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  
+{% endblock %}

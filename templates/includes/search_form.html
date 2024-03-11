@@ -1,0 +1,12 @@
+<div class="side-navbar">
+  <form action="{% url "news:news-list" %}" method="get" class="form-search" style="position: relative; display: inline-block; width:100%" autocomplete="off">
+    <div class="form-group">
+        <input type="text" name="search" id="search" placeholder="Search by news"  value="{{ request.GET.search }}" class="form-control" style="border-radius: 20px; padding-left: 20px;">
+      <button class="icon-link search-btn-style1"
+              style="background: none; border: none; position: absolute; right: 0; top: 0; vertical-align: middle; height: 100%;"
+              type="submit">
+        <i class="la la-search fs-4 sOpen-btn"></i>
+      </button>
+    </div>
+  </form>
+</div>

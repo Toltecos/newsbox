@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="tc-popular-posts-blog">
+    <div class="container">
+      <div class="content-widgets pt-30 pb-30">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+          <span> Login </span>
+          <i class="la la-angle-right ms-1"></i>
+        </p>
+        {% if form.errors %}
+          <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+        {% if next %}
+        {% endif %}
+      <div style="width: 33%">
+        <form action="{% url 'login' %}?next={{ request.path }}" method="post" novalidate>
+          <div class="form-content">
+            {% csrf_token %}
+            {{ form.as_div }}
+          </div>
+          <input type="hidden" name="next" value="{{ next }}" />
+          <input class="btn btn-success" type="submit" value="Login">
+          <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-primary">Cancel</a>
+        </form>
+      </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

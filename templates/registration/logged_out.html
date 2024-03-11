@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="tc-popular-posts-blog">
+    <div class="container">
+      <div class="content-widgets pt-30 pb-30">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+          <span> Logged out </span>
+          <i class="la la-angle-right ms-1"></i>
+        </p>
+        <div>
+          <a href="{% url 'login'%}">Click here to login again.</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

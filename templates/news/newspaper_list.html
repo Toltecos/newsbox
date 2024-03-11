@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  <title>newsBox - News List</title>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+  <section class="tc-popular-posts-blog">
+    <div class="container">
+      <div class="content-widgets pt-30 pb-30">
+
+        <div class="row">
+          <div class="col-lg-9">
+            <div class="tc-post-list-style3">
+              {% if news_list %}
+                <div class="items">
+                  <p class="color-000 text-uppercase mb-30 ltspc-1">
+                    {% if topic_id %}
+                      <a href="{% url "news:topic-news-list" topic_id %}"> {{ news_list.0.topic }} </a>
+                    {% else %}
+                      <a href="{% url "news:news-list" %}"> {{ request.GET.search|yesno:"found,latest" }} news </a>
+                    {% endif %}
+                    <i class="la la-angle-right ms-1"></i>
+                    {% if user.is_authenticated %}
+                      <a class="btn btn-sm btn-success" href="{% url 'news:news-create' %}">
+                        + Add news
+                      </a>
+                    {% endif %}
+                  </p>
+                  {% for news in news_list %}
+                    <div class="item{% if forloop.counter == news_list|length %} border-0{% endif %}">
+                      <div class="row">
+                        <div class="col-lg-5">
+                          <div class="img th-230 img-cover overflow-hidden">
+                            <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+                          </div>
+                        </div>
+                        <div class="col-lg-7">
+                          <div class="content mt-20 mt-lg-0">
+                            <a href="{% url "news:topic-news-list" topic_pk=news.topic.id %}"
+                               class="color-999 fsz-13px text-uppercase mb-10">
+                              {{ news.topic|title }}
+                            </a>
+                            <h4 class="title mb-15"><a
+                                href="{% url "news:news-detail" news.id %}">{{ news.title|title }}</h4>
+                            <div class="text color-666">
+                              {{ news.content|truncatewords:25 }}
+                            </div>
+                            <div class="meta-bot fsz-13px color-666">
+                              <ul class="d-flex">
+                                <li class="date me-5">
+                                  <a href="#"><i class="la la-calendar me-2"></i> {{ news.published_date|date:"d F Y" }}
+                                  </a>
+                                </li>
+                                {% for author in news.publishers.all %}
+                                  <li class="author me-5">
+                                  <a href="#"><i class="la la-user me-2"></i> by <span class="color-000">
+                                  {{ author.username|title }}
+                                {% empty %}
+                                  <p>No authors!</p>
+                                {% endfor %}
+                                </span>
+                                </a>
+                                </li>
+
+                                <!--<li class="comment">
+                                  <a href="#"><i class="la la-comment me-2"></i> 0
+                                    Comments</a>-->
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p>There are no news!</p>
+              {% endif %}
+            </div>
+            {% block pagination %}
+              {% include "includes/pagination.html" %}
+            {% endblock %}
+
+
+          </div>
+          <div class="col-lg-3">
+            <div class="widgets-sticky mt-5 mt-lg-0">
+              <p class="color-000 text-uppercase mb-30"> Stay Connected </p>
+              <!-- widget-social -->
+              <div class="tc-widget-social-style5 mb-40">
+                <a href="#" class="social-card">
+                  <div class="icon facebook-icon">
+                    <i class="lab la-facebook-f"></i>
+                  </div>
+                  <div class="cont">
+                    <strong> <b class="counter">575,5</b>K</strong>
+                    <span>Followers</span>
+                  </div>
+                </a>
+                <a href="#" class="social-card">
+                  <div class="icon twitter-icon">
+                    <i class="lab la-twitter"></i>
+                  </div>
+                  <div class="cont">
+                    <strong> <b class="counter">215,5</b>K</strong>
+                    <span>Followers</span>
+                  </div>
+                </a>
+                <a href="#" class="social-card">
+                  <div class="icon insta-icon">
+                    <i class="lab la-instagram"></i>
+                  </div>
+                  <div class="cont">
+                    <strong> <b class="counter">98,5</b>K</strong>
+                    <span>Followers</span>
+                  </div>
+                </a>
+                <a href="#" class="social-card border-0 pb-0">
+                  <div class="icon youtube-icon">
+                    <i class="lab la-youtube"></i>
+                  </div>
+                  <div class="cont">
+                    <strong> <b class="counter">24,2</b>K</strong>
+                    <span>Subscriber</span>
+                  </div>
+                </a>
+              </div>
+
+
+              <!-- widget-survey -->
+              <div class="tc-widget-survey-style1 mb-40">
+                <p class="color-000 text-uppercase mb-20 ltspc-1"> quick survey </p>
+                <div class="ques-title lh-4">
+                  How was your experience on NewsBox?
+                </div>
+                <div class="ansr-content">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck1">
+                    <label class="form-check-label" for="quesCheck1">
+                      Awesome, I’m satisfied!
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck2">
+                    <label class="form-check-label" for="quesCheck2">
+                      Normal
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck3">
+                    <label class="form-check-label" for="quesCheck3">
+                      Bad! Need improve more
+                    </label>
+                  </div>
+                </div>
+                <div class="btns">
+                  <a href="#" class="btn active me-2">
+                    Submit
+                  </a>
+                  <a href="#" class="btn">
+                    Result
+                  </a>
+                </div>
+
+                <small class="pl-num">
+                  <span class="color-000">24,562 </span> Peoples joined
+                </small>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% if last_topic_news %}
+<p class="color-000 text-uppercase mb-30 ltspc-1">
+  <a href="{% url "news:topic-news-list" topic_pk=last_topic_news.0.topic.id %}">{{ last_topic_news.0.topic }}</a> 
+  <i class="la la-angle-right ms-1"></i></p>
+<div class="row">
+  <div class="col-12 border-1 border-end brd-gray">
+    <div class="tc-post-grid-default">
+       {% with last_topic_news.0 as news %}
+      <div class="item">
+        <div class="img img-cover th-250">
+          <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+        </div>
+        <div class="content pt-20 pb-20">
+          <a href="{% url "news:topic-news-list" topic_pk=news.topic.id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">
+            {{ news.topic }}
+          </a>
+          <h4 class="title ltspc--1 mb-10">
+            <a href="{% url "news:news-detail" news.id %}">
+             {{ news.title|title }}
+            </a>
+          </h4>
+          <div class="text color-666">
+            {{ news.content|truncatewords:15 }}
+          </div>
+          <div class="meta-bot lh-1 mt-20">
+            <ul class="d-flex">
+              <li class="date me-5">
+                <a href="#"><i class="la la-calendar me-2"></i>
+                  {{ news.published_date|date:"d F Y" }}
+                </a>
+              </li>
+             <!--<li class="comment">
+                <a href="#"><i class="la la-comment me-2"></i> 7</a>
+              </li>-->
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% endwith %}
+    </div>
+    <div class="tc-post-list-style2">
+      <div class="items">
+        {% for news in last_topic_news|slice:"1:" %} 
+          <a href="{% url "news:news-detail" news.id %}" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+          <div class="row gx-3 align-items-center">
+            <div class="col-4">
+              <div class="img th-70 img-cover">
+                <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="content" style="padding-right:10px;">
+                <!--<small class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ news.topic }}</small>-->
+                <h5 class="title ltspc--1">
+                  {{ news.title|title }}
+                </h5>
+              </div>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

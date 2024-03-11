@@ -10,9 +10,12 @@ from news.forms import NewspaperForm, RedactorCreationForm, RedactorUpdateForm
 from news.models import Newspaper, Topic
 
 
+TRAVEL_TOPIC_ID = 7
+
+
 def index(request: HttpRequest) -> HttpResponse:
-    travel_topic_id = 7
-    last_ten_news = Newspaper.objects.exclude(topic=travel_topic_id)[:7]
+
+    last_ten_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID)[:7]
 
     topics = Topic.objects.all()
     topics_last_news = {

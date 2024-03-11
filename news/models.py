@@ -14,8 +14,15 @@ class Newspaper(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="news")
-    publishers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="news")
+    topic = models.ForeignKey(
+        Topic,
+        on_delete=models.CASCADE,
+        related_name="news"
+    )
+    publishers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="news"
+    )
 
     class Meta:
         ordering = ["-published_date"]

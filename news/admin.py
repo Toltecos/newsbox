@@ -11,7 +11,13 @@ admin.site.unregister(Group)
 @admin.register(Redactor)
 class CustomUserAdmin(BaseUserAdmin):
     search_fields = ["username", "email"]
-    list_display = ["username", "email", "first_name", "last_name", "years_of_experience"]
+    list_display = [
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "years_of_experience"
+    ]
 
 
 @admin.register(Newspaper)

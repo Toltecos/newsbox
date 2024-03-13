@@ -15,10 +15,12 @@ $(function() {
     // -------- dark_light themes --------
     $("#dark-icon").on("click", function() {
         $("body").addClass("dark-theme");
+        localStorage["theme"] = "dark"
     })
 
     $("#light-icon").on("click", function() {
         $("body").removeClass("dark-theme");
+        localStorage["theme"] = "ligth"
     })
 
 
@@ -1404,6 +1406,17 @@ if ($(window).width() > 1200) {
     $('.parallaxie').parallaxie({});
 }
 
+
+
+if (localStorage["theme"] == "ligth"){
+
+    $("body").removeClass("dark-theme");
+    $(".nav-subs-card").removeClass("show");
+    $("#light-icon").addClass("active");
+    $("#dark-icon").removeClass("active");
+
+}
+
 //--- START Ready
 $(document).ready(function () {
 
@@ -1414,6 +1427,7 @@ $(document).ready(function () {
 	$('#weather').html(localStorage["weather"]);
 	//$('#icon i').hide();	
 	//$('#icon').append(localStorage["icon"]);
+	
 	
 	
 setInterval(function() {

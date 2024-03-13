@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load query_transform %}
 {% block title %}
   <title>newsBox - {{ news.title|title }}</title>
 {% endblock %}
@@ -10,7 +10,11 @@
       <div class="tc-main-post-title pt-30 pb-30">
         <div class="row">
           <p class="mb-15">
-            <span class="text-uppercase">{{ news.topic.name }}</span>
+            <span class="text-uppercase">
+              <a href="{% url "news:topic-news-list" news.topic_id %}">
+                {{ topic_dict|dict_key:news.topic_id }} 
+              </a>
+              </span>
             <i class="la la-angle-right ms-1"></i>
             <span class="me-40">
               <i class="la la-calendar me-1"></i>{{ news.published_date|date:"d F Y" }}
@@ -24,7 +28,7 @@
               </a>
             {% endif %}
           </p>
-          <h2 class="title">{{ news.title|title }}</h2>
+          <h2 class="title">{{ news.title|title }} </h2>
         </div>
       </div>
       <div class="tc-main-post-img img-cover">
@@ -75,7 +79,8 @@
     </div>
   </section>
   <!-- ====== end author info ====== -->
-
+{% with topic_dict|dict_key:news.topic_id|lower as topic %}  
+{% with topics_last_news|dict_key:topic as related_news %}
   {% if related_news|length > 2 %}
   <section class="tc-main-post-style1 pb-60">
     <div class="container">
@@ -93,7 +98,7 @@
                       <img src="/static/img/news/{{ news.id }}.jpg" alt="">
                     </div>
                     <div class="content pt-20">
-                      <a href="{% url "news:topic-news-list" topic_pk=news.topic.id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ news.topic|title }}</a>
+                      <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ topic_dict|dict_key:news.topic_id }}</a>
                       <h4 class="title ltspc--1 mb-10">
                         <a href="{% url "news:news-detail" news.id %}">
                           {{ news.title|title }}
@@ -129,5 +134,6 @@
     </div>
   </section>
 {% endif %}
-  
+ {% endwith %}
+ {% endwith %} 
 {% endblock %}

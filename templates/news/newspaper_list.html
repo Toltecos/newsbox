@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load query_transform %}
 {% load static %}
 
 {% block title %}
@@ -21,7 +22,7 @@
                 <div class="items">
                   <p class="color-000 text-uppercase mb-30 ltspc-1">
                     {% if topic_id %}
-                      <a href="{% url "news:topic-news-list" topic_id %}"> {{ news_list.0.topic }} </a>
+                      <a href="{% url "news:topic-news-list" topic_id %}"> {{ topic_dict|dict_key:news_list.0.topic_id }} </a>
                     {% else %}
                       <a href="{% url "news:news-list" %}"> {{ request.GET.search|yesno:"found,latest" }} news </a>
                     {% endif %}
@@ -42,9 +43,9 @@
                         </div>
                         <div class="col-lg-7">
                           <div class="content mt-20 mt-lg-0">
-                            <a href="{% url "news:topic-news-list" topic_pk=news.topic.id %}"
+                            <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}"
                                class="color-999 fsz-13px text-uppercase mb-10">
-                              {{ news.topic|title }}
+                             {{ topic_dict|dict_key:news.topic_id }}
                             </a>
                             <h4 class="title mb-15"><a
                                 href="{% url "news:news-detail" news.id %}">{{ news.title|title }}</h4>

@@ -8,24 +8,16 @@ from django.views import generic
 
 from news.forms import NewspaperForm, RedactorCreationForm, RedactorUpdateForm
 from news.models import Newspaper, Topic
-
-
-TRAVEL_TOPIC_ID = 7
+from news.cache import get_cache, set_all_cache
 
 
 def index(request: HttpRequest) -> HttpResponse:
+    last_ten_news = get_cache("last_ten_news")
 
-    last_ten_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID)[:7]
-
-    topics = Topic.objects.all()
-    topics_last_news = {
-        topic.name.lower(): Newspaper.objects.filter(topic=topic.id)[:3]
-        for topic in topics
-    }
     context = {
         "last_ten_news": last_ten_news,
-        "topics_last_news": topics_last_news,
     }
+
     return render(request, "news/index.html", context=context)
 
 
@@ -37,18 +29,27 @@ class TopicListView(LoginRequiredMixin, generic.ListView):
 class TopicCreateView(LoginRequiredMixin, generic.CreateView):
     model = Topic
     fields = "__all__"
-    success_url = reverse_lazy("news:topic-list")
+
+    def get_success_url(self):
+        set_all_cache("now")
+        return reverse_lazy("news:topic-list")
 
 
 class TopicUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Topic
     fields = "__all__"
-    success_url = reverse_lazy("news:topic-list")
+
+    def get_success_url(self):
+        set_all_cache("now")
+        return reverse_lazy("news:topic-list")
 
 
 class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Topic
-    success_url = reverse_lazy("news:topic-list")
+
+    def get_success_url(self):
+        set_all_cache("now")
+        return reverse_lazy("news:topic-list")
 
 
 class NewspaperListView(generic.ListView):
@@ -57,7 +58,7 @@ class NewspaperListView(generic.ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Newspaper.objects.select_related("topic")
+        queryset = Newspaper.objects.prefetch_related("publishers")
         search = self.request.GET.get("search")
         if search:
             return queryset.filter(
@@ -86,17 +87,14 @@ class NewspaperDetailView(generic.DetailView):
     model = Newspaper
     context_object_name = 'news'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        related_news = Newspaper.objects.filter(topic=self.object.topic.id)[:5]
-        context["related_news"] = related_news
-        return context
-
 
 class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
     model = Newspaper
     form_class = NewspaperForm
-    success_url = reverse_lazy("news:news-list")
+
+    def get_success_url(self):
+        set_all_cache("now")
+        return reverse_lazy("news:news-list")
 
 
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -104,12 +102,16 @@ class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = NewspaperForm
 
     def get_success_url(self):
+        set_all_cache("now")
         return reverse_lazy("news:news-detail", kwargs={"pk": self.object.pk})
 
 
 class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Newspaper
-    success_url = reverse_lazy("news:news-list")
+
+    def get_success_url(self):
+        set_all_cache("now")
+        return reverse_lazy("news:news-list")
 
 
 class RedactorListView(LoginRequiredMixin, generic.ListView):

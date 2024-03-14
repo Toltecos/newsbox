@@ -1417,9 +1417,42 @@ if (localStorage["theme"] == "ligth"){
 
 }
 
+var survey = `
+	    <div class="text color-666">
+			Awesome, I’m satisfied!
+	    </div>
+		<div style="margin-bottom: 7px;font-size: 12px;">
+		  <div class="w3-container w3-red w3-center" style="width:70%">70%</div>
+		</div>     
+	    <div class="text color-666">
+			Normal 
+	    </div>
+		<div style="margin-bottom: 7px;font-size: 12px;">
+		  <div class="w3-container w3-red w3-center" style="width:27%">27%</div>
+		</div> 			
+	    <div class="text color-666">
+			Bad! Need improve more
+	    </div>
+	    </label>
+		<div style="margin-bottom: 7px;font-size: 12px;">
+		  <div class="w3-container w3-red w3-center" style="width:3%">3%</div>
+		</div>
+	`
+
+
+function vote(){
+	var peoples = $(".tc-widget-survey-style1 .pl-num span").text();
+	localStorage["peoples"] = parseInt(peoples) + 1;
+	$(".tc-widget-survey-style1 .pl-num span").html(localStorage["peoples"]);		
+	localStorage["vote"] = 1;
+	$(".tc-widget-survey-style1 .ansr-content").html(survey);
+	$(".tc-widget-survey-style1 .btns").hide();
+	//console.log("Vote")
+}
+
 //--- START Ready
 $(document).ready(function () {
-
+	//localStorage["vote"] = 0
 	var i = 0;
 	
 	$('#temp').html(localStorage["temp"]);
@@ -1429,7 +1462,12 @@ $(document).ready(function () {
 	//$('#icon').append(localStorage["icon"]);
 	
 	
-	
+    if (localStorage["vote"] == 1){
+		$(".tc-widget-survey-style1 .ansr-content").html(survey);
+		$(".tc-widget-survey-style1 .btns").hide();
+		$(".tc-widget-survey-style1 .pl-num span").html(localStorage["peoples"]);	
+	}
+
 setInterval(function() {
 	
 	temp = $('#ww_732d3d52f15bd > div > div.ww_current > div.ww_temp').text();
@@ -1460,6 +1498,7 @@ setInterval(function() {
 	}	
 	color = $('#icon i').css("color");	
 	$('#icon svg').css("fill",color);
+
 		
 }, 500);
 

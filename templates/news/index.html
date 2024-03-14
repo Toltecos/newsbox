@@ -34,14 +34,14 @@
                     <div class="meta-bot lh-1 mt-40">
                       <ul class="d-flex">
                         <li class="date me-5">
-                          <a href="#"><i class="la la-calendar me-2"></i> 
+                          <a href="/news/?search_date={{ news.published_date|date:"Y-m-d" }}"><i class="la la-calendar me-2"></i> 
                             {{ news.published_date|date:"d F Y" }}
                           </a>
                         </li>
                         {% for author in news.publishers.all %}
                           <li class="author me-5">
-                            <a href="#"><i class="la la-user me-2"></i> by <span class="color-000">
-                                {{ author.username|title }}
+                            <a href="{% url "news:redactor-news-list" author.id %}"><i class="la la-user me-2"></i> by <span class="color-000">
+                               {{ author.first_name }} {{ author.last_name }}
                             </span></a>
                             {% empty %}
                             <p>No authors!</p>
@@ -102,7 +102,7 @@
                   <div class="meta-bot lh-1 mt-20">
                     <ul class="d-flex">
                       <li class="date me-5">
-                        <a href="#"><i class="la la-calendar me-2"></i> {{ news.published_date|date:"d F Y" }}</a>
+                        <a href="/news/?search_date={{ news.published_date|date:"Y-m-d" }}"><i class="la la-calendar me-2"></i> {{ news.published_date|date:"d F Y" }}</a>
                       </li>
                       <!--<li class="comment">
                         <a href="#"><i class="la la-comment me-2"></i> 8 </a>
@@ -203,11 +203,13 @@
           <div class="swiper-slide">
             <div class="columnist-card d-flex align-items-center">
               <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                <img src="/static/img/colums/1.png" alt="">
+                <img src="/static/img/colums/3.png" alt="">
               </div>
               <div class="info">
                 <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/3/">
                   Conor McGregor
+                  </a>
                 </h6>
                 <div class="jop-title">
                   <small class="fsz-13px color-999">Specialize in</small>
@@ -219,11 +221,13 @@
           <div class="swiper-slide">
             <div class="columnist-card d-flex align-items-center">
               <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                <img src="/static/img/colums/2.png" alt="">
+                <img src="/static/img/colums/4.png" alt="">
               </div>
               <div class="info">
                 <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/4/">
                   Elon Musk
+                  </a>
                 </h6>
                 <div class="jop-title">
                   <small class="fsz-13px color-999">Specialize in</small>
@@ -235,11 +239,13 @@
           <div class="swiper-slide">
             <div class="columnist-card d-flex align-items-center">
               <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                <img src="/static/img/colums/3.png" alt="">
+                <img src="/static/img/colums/5.png" alt="">
               </div>
               <div class="info">
                 <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/5/">
                   Denis Villeneuve
+                  </a>
                 </h6>
                 <div class="jop-title">
                   <small class="fsz-13px color-999">Specialize in</small>
@@ -251,11 +257,13 @@
           <div class="swiper-slide">
             <div class="columnist-card d-flex align-items-center">
               <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                <img src="/static/img/colums/4.png" alt="">
+                <img src="/static/img/colums/6.png" alt="">
               </div>
               <div class="info">
                 <h6 class="name fsz-20px mb-10">
-                  Boris Johnson
+                  <a href="/news/redactor/6/">
+                    Boris Johnson
+                  </a>
                 </h6>
                 <div class="jop-title">
                   <small class="fsz-13px color-999">Specialize in</small>

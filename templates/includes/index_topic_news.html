@@ -26,7 +26,7 @@
           <div class="meta-bot lh-1 mt-20">
             <ul class="d-flex">
               <li class="date me-5">
-                <a href="#"><i class="la la-calendar me-2"></i>
+                <a href="/news/?search_date={{ news.published_date|date:"Y-m-d" }}"><i class="la la-calendar me-2"></i>
                   {{ news.published_date|date:"d F Y" }}
                 </a>
               </li>

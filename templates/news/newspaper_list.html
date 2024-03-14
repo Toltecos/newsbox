@@ -17,12 +17,50 @@
 
         <div class="row">
           <div class="col-lg-9">
+
             <div class="tc-post-list-style3">
               {% if news_list %}
+
+                {% if redactor %}
+                  <!-- ====== start author info ====== -->
+                  <div class="tc-author-card pb-30">
+                    <div class="content p-30 d-block d-lg-flex bg-gray1">
+                      {% with redactor as author %}
+                        <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
+                          <img src="/static/img/colums/{{ author.id }}.png" alt="">
+                        </div>
+                        <div class="info">
+                          <h5 class="title fsz-24px fw-bold">{{ author.first_name }} {{ author.last_name}}</h5>
+                          {#                                <small class="fsz-12px color-main text-uppercase">{{ topic_dict|dict_key:news_list.0.topic_id }}  topic editor</small>#}
+                          <div class="text fsz-15px color-666 mt-20">
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+                            anim id est
+                            laborum sed ut perspiciatis unde. Lorem ispum dolor sit amet prodigues ametalia
+                          </div>
+                          <div class="social-links mt-20 fsz-19px">
+                            <a href="https://twitter.com" target="_blank" class="me-15"><i
+                                class="la la-twitter"></i></a>
+                            <a href="https://facebook.com" target="_blank" class="me-15"><i
+                                class="la la-facebook-f"></i></a>
+                            <a href="https://instagram.com" target="_blank" class="me-15"><i
+                                class="la la-instagram"></i></a>
+                            <a href="https://youtube.com" target="_blank"><i class="la la-youtube"></i></a>
+                          </div>
+                        </div>
+                      {% endwith %}
+                    </div>
+                  </div>
+                  <!-- ====== end author info ====== -->
+                {% endif %}
+
                 <div class="items">
                   <p class="color-000 text-uppercase mb-30 ltspc-1">
-                    {% if topic_id %}
+                    {% if redactor %}
+                      <a href="{% url "news:redactor-news-list" redactor.id %}"> Redactor's news </a>
+                    {% elif topic_id %}
                       <a href="{% url "news:topic-news-list" topic_id %}"> {{ topic_dict|dict_key:news_list.0.topic_id }} </a>
+                    {% elif request.GET.search_date %}
+                      <a href="{% url "news:news-list" %}"> {{ news_list.0.published_date|date:"d F Y" }} </a>
                     {% else %}
                       <a href="{% url "news:news-list" %}"> {{ request.GET.search|yesno:"found,latest" }} news </a>
                     {% endif %}
@@ -45,30 +83,31 @@
                           <div class="content mt-20 mt-lg-0">
                             <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}"
                                class="color-999 fsz-13px text-uppercase mb-10">
-                             {{ topic_dict|dict_key:news.topic_id }}
+                              {{ topic_dict|dict_key:news.topic_id }}
                             </a>
                             <h4 class="title mb-15"><a
-                                href="{% url "news:news-detail" news.id %}">{{ news.title|title }}</h4>
+                                href="{% url "news:news-detail" news.id %}"> {{ news.title|title }}</h4>
                             <div class="text color-666">
                               {{ news.content|truncatewords:25 }}
                             </div>
                             <div class="meta-bot fsz-13px color-666">
                               <ul class="d-flex">
                                 <li class="date me-5">
-                                  <a href="#"><i class="la la-calendar me-2"></i> {{ news.published_date|date:"d F Y" }}
+                                  <a href="/news/?search_date={{ news.published_date|date:"Y-m-d" }}"><i
+                                      class="la la-calendar me-2"></i> {{ news.published_date|date:"d F Y" }}
                                   </a>
                                 </li>
                                 {% for author in news.publishers.all %}
                                   <li class="author me-5">
-                                  <a href="#"><i class="la la-user me-2"></i> by <span class="color-000">
-                                  {{ author.username|title }}
+                                  <a href="{% url "news:redactor-news-list" author.id %}">
+                                  <i class="la la-user me-2"></i> by <span class="color-000">
+                                  {{ author.first_name }} {{ author.last_name }}
                                 {% empty %}
                                   <p>No authors!</p>
                                 {% endfor %}
                                 </span>
                                 </a>
                                 </li>
-
                                 <!--<li class="comment">
                                   <a href="#"><i class="la la-comment me-2"></i> 0
                                     Comments</a>-->
@@ -96,7 +135,7 @@
               <p class="color-000 text-uppercase mb-30"> Stay Connected </p>
               <!-- widget-social -->
               <div class="tc-widget-social-style5 mb-40">
-                <a href="#" class="social-card">
+                <a href="https://facebook.com" target="_blank" class="social-card">
                   <div class="icon facebook-icon">
                     <i class="lab la-facebook-f"></i>
                   </div>
@@ -105,7 +144,7 @@
                     <span>Followers</span>
                   </div>
                 </a>
-                <a href="#" class="social-card">
+                <a href="https://twitter.com" target="_blank" class="social-card">
                   <div class="icon twitter-icon">
                     <i class="lab la-twitter"></i>
                   </div>
@@ -114,7 +153,7 @@
                     <span>Followers</span>
                   </div>
                 </a>
-                <a href="#" class="social-card">
+                <a href="https://instagram.com" target="_blank" class="social-card">
                   <div class="icon insta-icon">
                     <i class="lab la-instagram"></i>
                   </div>
@@ -123,7 +162,7 @@
                     <span>Followers</span>
                   </div>
                 </a>
-                <a href="#" class="social-card border-0 pb-0">
+                <a href="https://youtube.com" target="_blank" class="social-card border-0 pb-0">
                   <div class="icon youtube-icon">
                     <i class="lab la-youtube"></i>
                   </div>
@@ -143,38 +182,35 @@
                 </div>
                 <div class="ansr-content">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck1">
-                    <label class="form-check-label" for="quesCheck1">
+                    <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck1" checked>
+                    <label class="form-check-label color-666" for="quesCheck1">
                       Awesome, I’m satisfied!
                     </label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck2">
-                    <label class="form-check-label" for="quesCheck2">
+                    <label class="form-check-label color-666" for="quesCheck2">
                       Normal
                     </label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck3">
-                    <label class="form-check-label" for="quesCheck3">
+                    <label class="form-check-label color-666" for="quesCheck3">
                       Bad! Need improve more
                     </label>
                   </div>
                 </div>
                 <div class="btns">
-                  <a href="#" class="btn active me-2">
+                  <a href="javascript:vote()" class="btn active me-2">
                     Submit
-                  </a>
-                  <a href="#" class="btn">
-                    Result
                   </a>
                 </div>
 
                 <small class="pl-num">
-                  <span class="color-000">24,562 </span> Peoples joined
+                  <span class="color-000">24562 </span> Peoples joined
                 </small>
               </div>
-              
+
             </div>
           </div>
         </div>

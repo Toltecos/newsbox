@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from news.forms import NewspaperForm, RedactorCreationForm, RedactorUpdateForm
-from news.models import Newspaper, Topic
+from news.models import Newspaper, Topic, Redactor
 from news.cache import get_cache, set_all_cache
 
 
@@ -61,6 +61,11 @@ class NewspaperListView(generic.ListView):
             return queryset.filter(
                 Q(title__icontains=search) | Q(content__icontains=search)
             )
+        search_date = self.request.GET.get("search_date")
+        if search_date:
+            return queryset.filter(
+                Q(published_date__icontains=search_date)
+            )
         return queryset
 
 
@@ -78,6 +83,23 @@ class TopicNewspaperListView(generic.ListView):
     def get_queryset(self):
         topic_id = self.kwargs.get("topic_pk")
         return Newspaper.objects.select_related("topic").filter(topic=topic_id)
+
+
+class RedactorNewspaperListView(generic.ListView):
+    model = Newspaper
+    context_object_name = 'news_list'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        redactor_id = self.kwargs.get("redactor_pk")
+        redactor = Redactor.objects.get(pk=redactor_id)
+        context["redactor"] = redactor
+        return context
+
+    def get_queryset(self):
+        redactor_id = self.kwargs.get("redactor_pk")
+        return Newspaper.objects.select_related("topic").filter(publishers=redactor_id)
 
 
 class NewspaperDetailView(generic.DetailView):
@@ -113,7 +135,7 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class RedactorListView(LoginRequiredMixin, generic.ListView):
     model = get_user_model()
-    paginate_by = 5
+    paginate_by = 10
 
 
 class RedactorDetailView(LoginRequiredMixin, generic.DetailView):

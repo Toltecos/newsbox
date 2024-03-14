@@ -8,6 +8,7 @@ from news.views import (
     NewspaperUpdateView,
     NewspaperDeleteView,
     TopicNewspaperListView,
+    RedactorNewspaperListView,
     TopicListView,
     TopicCreateView,
     TopicUpdateView,
@@ -30,6 +31,11 @@ url_news = [
         "news/topic/<int:topic_pk>/",
         TopicNewspaperListView.as_view(),
         name="topic-news-list",
+    ),
+    path(
+        "news/redactor/<int:redactor_pk>/",
+        RedactorNewspaperListView.as_view(),
+        name="redactor-news-list",
     ),
     path(
         "news/create/",

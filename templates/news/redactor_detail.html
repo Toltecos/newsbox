@@ -4,7 +4,7 @@
 
 <section class="tc-main-post-style1 pb-30">
   <div class="container">
-    <div class="tc-main-post-title pt-30 pb-30">
+    <div class="tc-main-post-title pt-30">
       <div class="row">
         <p class="mb-15">
           <span class="text-uppercase">Redactor detail</span>
@@ -21,22 +21,44 @@
               Redactor List
             </a>        
         </p>
-        <h2 class="title">{{ news.title|title }}</h2>
       </div>
     </div>
 
     <div class="tc-main-post-content color-000">
       <div class="row">
-        <div style="padding: 0 25px 25px 25px">
-          <h5 class="mb-20"><strong>Username:</strong> {{ redactor.username }}</h5>
-          <h5 class="mb-20"><strong>First name:</strong> {{ redactor.first_name }}</h5>
-          <h5 class="mb-20"><strong>Last name:</strong> {{ redactor.last_name }}</h5>
-          <h5 class="mb-20"><strong>Experience:</strong> {{ redactor.years_of_experience }} years</h5>
-          <!--<h5 class="mb-20"><strong>Is staff:</strong> {{ redactor.is_staff }}</h5>-->
-        </div>
+        
+        
+                  <!-- ====== start author info ====== -->
+                  <div class="tc-author-card pb-30">
+                    <div class="content p-30 d-block d-lg-flex bg-gray1">
+                      {% with redactor as author %}
+                        <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
+                          <img src="/static/img/colums/{{ author.id }}.png" alt="">
+                        </div>
+                        <div class="info">
+                          <h5 class="title fsz-24px fw-bold">{{ author.first_name }} {{ author.last_name}}</h5>
+                          {#                                <small class="fsz-12px color-main text-uppercase">{{ topic_dict|dict_key:news_list.0.topic_id }}  topic editor</small>#}
+                          <div class="text fsz-15px color-666 mt-20">
+                            <h5 class="mb-20 title">Username: <span class="color-000">{{ redactor.username }}</span></h5>
+                            <h5 class="mb-20 title">First name: <span class="color-000">{{ redactor.first_name }}</span></h5>
+                            <h5 class="mb-20 title">Last name: <span class="color-000">{{ redactor.last_name }}</span></h5>
+                            <h5 class="mb-20 title">Experience: <span class="color-000">{{ redactor.years_of_experience }} years</span></h5>
+                            <!--<h5 class="mb-20">Is staff: {{ redactor.is_staff }}</h5>-->
+                          </div>
+                        </div>
+                      {% endwith %}
+                    </div>
+                  </div>
+                  <!-- ====== end author info ====== -->
+          
+        
+  
+         
+       
         <div style="text-align: center">
           <h5>News by {{ redactor.first_name }} {{ redactor.last_name }}</h5>
         </div>
+      <div style="padding: 0 25px 0px 25px">
         {% if redactor.news.all %}
           <table class="table">
             <tr>
@@ -73,6 +95,7 @@
         {% else %}
           <p>There are no news!</p>
         {% endif %}
+       </div>
       </div>
     </div>
   </div>

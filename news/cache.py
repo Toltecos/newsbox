@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from news.models import Newspaper, Topic
 
+
 TRAVEL_TOPIC_ID = 7
 
 

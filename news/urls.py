@@ -1,7 +1,7 @@
 from django.urls import path
 
 from news.views import (
-    index,
+    IndexListView,
     NewspaperListView,
     NewspaperDetailView,
     NewspaperCreateView,
@@ -23,7 +23,7 @@ from news.views import (
 app_name = "news"
 
 url_news = [
-    path("", index, name="index"),
+    path("", IndexListView.as_view(), name="index"),
     path("news/", NewspaperListView.as_view(), name="news-list"),
     path("news/<int:pk>/", NewspaperDetailView.as_view(), name="news-detail"),
     path(

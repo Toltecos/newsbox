@@ -31,8 +31,8 @@ def set_all_cache(cmd=""):
     if not last_cached or cmd == "now" or last_cached < last_update:
         set_cache("last_update", datetime.datetime.now())
 
-        last_ten_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID)[:7]
-        set_cache("last_ten_news", last_ten_news)
+        index_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID)[:7]
+        set_cache("index_news", index_news)
 
         topic_list = Topic.objects.all()
         set_cache('topic_list', topic_list)

@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views import generic
@@ -11,14 +9,13 @@ from news.models import Newspaper, Topic
 from news.cache import get_cache, set_all_cache
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    last_ten_news = get_cache("last_ten_news")
+class IndexListView(generic.ListView):
+    template_name = "news/index.html"
+    context_object_name = 'index_news'
 
-    context = {
-        "last_ten_news": last_ten_news,
-    }
-
-    return render(request, "news/index.html", context=context)
+    def get_queryset(self):
+        queryset = get_cache("index_news")
+        return queryset
 
 
 class TopicListView(LoginRequiredMixin, generic.ListView):

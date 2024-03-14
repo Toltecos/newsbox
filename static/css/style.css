@@ -17941,3 +17941,7 @@ table .detail:hover,
 p.text-uppercase > a:hover {
     color:#ed3410 !important;
 }
+
+body p.text-uppercase .btn:hover {
+    color: inherit !important;
+}

@@ -17,6 +17,9 @@
               Delete
             </a>
           {% endif %}
+            <a href="{% url 'news:redactor-list' %}" class="btn btn-primary btn-sm link-to-page">
+              Redactor List
+            </a>        
         </p>
         <h2 class="title">{{ news.title|title }}</h2>
       </div>
@@ -29,10 +32,10 @@
           <h5 class="mb-20"><strong>First name:</strong> {{ redactor.first_name }}</h5>
           <h5 class="mb-20"><strong>Last name:</strong> {{ redactor.last_name }}</h5>
           <h5 class="mb-20"><strong>Experience:</strong> {{ redactor.years_of_experience }} years</h5>
-          <h5 class="mb-20"><strong>Is staff:</strong> {{ redactor.is_staff }}</h5>
+          <!--<h5 class="mb-20"><strong>Is staff:</strong> {{ redactor.is_staff }}</h5>-->
         </div>
         <div style="text-align: center">
-          <h5>News</h5>
+          <h5>News by {{ redactor.first_name }} {{ redactor.last_name }}</h5>
         </div>
         {% if redactor.news.all %}
           <table class="table">

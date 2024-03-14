@@ -13,6 +13,9 @@
               + Add Redactor
             </a>
           {% endif %}
+            <a href="{% url 'news:topic-list' %}" class="btn btn-primary btn-sm link-to-page">
+              Topic List
+            </a>        
         </p>
           {% if redactor_list %}
           <table class="table">
@@ -21,7 +24,7 @@
               <th>Username</th>
               <th>First name</th>
               <th>Last name</th>
-              <th>years_of_experience</th>
+              <th>Experience</th>
               <th>Update</th>
               <th>Delete</th>
             </tr>

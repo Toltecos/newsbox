@@ -15,6 +15,9 @@
               + Add Topic
             </a>
           {% endif %}
+           <a href="{% url 'news:redactor-list' %}" class="btn btn-primary btn-sm link-to-page">
+              Redactor List
+            </a>
         </p>
         {% if topic_list %}
           <table class="table">

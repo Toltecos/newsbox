@@ -2,103 +2,101 @@
 
 {% block content %}
 
-<section class="tc-main-post-style1 pb-30">
-  <div class="container">
-    <div class="tc-main-post-title pt-30">
-      <div class="row">
-        <p class="mb-15">
-          <span class="text-uppercase">Redactor detail</span>
-          <i class="la la-angle-right ms-1"></i>
-          {% if user.is_authenticated %}
-            <a class="btn btn-success btn-sm" href="{% url 'news:redactor-update' pk=redactor.id %}">
-              Update
-            </a>
-            <a class="btn btn-danger btn-sm" href="{% url 'news:redactor-delete' pk=redactor.id %}">
-              Delete
-            </a>
-          {% endif %}
+  <section class="tc-main-post-style1 pb-30">
+    <div class="container">
+      <div class="tc-main-post-title pt-30">
+        <div class="row">
+          <p class="mb-15 text-uppercase">
+            <span class="text-uppercase">Redactor detail</span>
+            <i class="la la-angle-right ms-1"></i>
+            {% if user.is_authenticated %}
+              <a class="btn btn-success btn-sm" href="{% url 'news:redactor-update' pk=redactor.id %}">
+                Update
+              </a>
+              <a class="btn btn-danger btn-sm" href="{% url 'news:redactor-delete' pk=redactor.id %}">
+                Delete
+              </a>
+            {% endif %}
             <a href="{% url 'news:redactor-list' %}" class="btn btn-primary btn-sm link-to-page">
               Redactor List
-            </a>        
-        </p>
-      </div>
-    </div>
-
-    <div class="tc-main-post-content color-000">
-      <div class="row">
-        
-        
-                  <!-- ====== start author info ====== -->
-                  <div class="tc-author-card pb-30">
-                    <div class="content p-30 d-block d-lg-flex bg-gray1">
-                      {% with redactor as author %}
-                        <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
-                          <img src="/static/img/colums/{{ author.id }}.png" alt="">
-                        </div>
-                        <div class="info">
-                          <h5 class="title fsz-24px fw-bold">{{ author.first_name }} {{ author.last_name}}</h5>
-                          {#                                <small class="fsz-12px color-main text-uppercase">{{ topic_dict|dict_key:news_list.0.topic_id }}  topic editor</small>#}
-                          <div class="text fsz-15px color-666 mt-20">
-                            <h5 class="mb-20 title">Username: <span class="color-000">{{ redactor.username }}</span></h5>
-                            <h5 class="mb-20 title">First name: <span class="color-000">{{ redactor.first_name }}</span></h5>
-                            <h5 class="mb-20 title">Last name: <span class="color-000">{{ redactor.last_name }}</span></h5>
-                            <h5 class="mb-20 title">Experience: <span class="color-000">{{ redactor.years_of_experience }} years</span></h5>
-                            <!--<h5 class="mb-20">Is staff: {{ redactor.is_staff }}</h5>-->
-                          </div>
-                        </div>
-                      {% endwith %}
-                    </div>
-                  </div>
-                  <!-- ====== end author info ====== -->
-          
-        
-  
-         
-       
-        <div style="text-align: center">
-          <h5>News by {{ redactor.first_name }} {{ redactor.last_name }}</h5>
+            </a>
+          </p>
         </div>
-      <div style="padding: 0 25px 0px 25px">
-        {% if redactor.news.all %}
-          <table class="table">
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Topic</th>
-              <th>Update</th>
-              <th>Delete</th>
-            </tr>
-            {% for news in redactor.news.all %}
-            <tr>
-              <td>
-                {{ news.id }}
-              </td>
-              <td>
-                {{ news.title }}
-              </td>
-              <td>
-                {{ news.topic }}
-              </td>
-              <td>
-                <a style="color: #198754" href="{% url 'news:news-update' pk=news.id %}">
-                  Update
-                </a>
-              </td>
-              <td>
-                <a style="color: #ed3410" href="{% url 'news:news-delete' pk=news.id %}">
-                  Delete
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-          </table>
-        {% else %}
-          <p>There are no news!</p>
-        {% endif %}
-       </div>
+      </div>
+
+      <div class="tc-main-post-content color-000">
+        <div class="row">
+
+
+          <!-- ====== start author info ====== -->
+          <div class="tc-author-card pb-30">
+            <div class="content p-30 d-block d-lg-flex bg-gray1">
+              {% with redactor as author %}
+                <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
+                  <img src="/static/img/colums/{{ author.id }}.png" alt="">
+                </div>
+                <div class="info">
+                  <h5 class="title fsz-24px fw-bold">{{ author.first_name }} {{ author.last_name }}</h5>
+                  {#                                <small class="fsz-12px color-main text-uppercase">{{ topic_dict|dict_key:news_list.0.topic_id }}  topic editor</small>#}
+                  <div class="text fsz-15px color-666 mt-20">
+                    <h5 class="mb-20 title">Username: <span class="color-000">{{ redactor.username }}</span></h5>
+                    <h5 class="mb-20 title">First name: <span class="color-000">{{ redactor.first_name }}</span></h5>
+                    <h5 class="mb-20 title">Last name: <span class="color-000">{{ redactor.last_name }}</span></h5>
+                    <h5 class="mb-20 title">Experience: <span
+                        class="color-000">{{ redactor.years_of_experience }} years</span></h5>
+                    <!--<h5 class="mb-20">Is staff: {{ redactor.is_staff }}</h5>-->
+                  </div>
+                </div>
+              {% endwith %}
+            </div>
+          </div>
+          <!-- ====== end author info ====== -->
+
+
+          <div style="text-align: center">
+            <h5>News by {{ redactor.first_name }} {{ redactor.last_name }}</h5>
+          </div>
+          <div style="padding: 0 25px 0px 25px">
+            {% if redactor.news.all %}
+              <table class="table">
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Topic</th>
+                  <th>Update</th>
+                  <th>Delete</th>
+                </tr>
+                {% for news in redactor.news.all %}
+                  <tr>
+                    <td>
+                      {{ news.id }}
+                    </td>
+                    <td>
+                      {{ news.title }}
+                    </td>
+                    <td>
+                      {{ news.topic }}
+                    </td>
+                    <td>
+                      <a style="color: #198754" href="{% url 'news:news-update' pk=news.id %}">
+                        Update
+                      </a>
+                    </td>
+                    <td>
+                      <a style="color: #ed3410" href="{% url 'news:news-delete' pk=news.id %}">
+                        Delete
+                      </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+            {% else %}
+              <p>There are no news!</p>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 {% endblock %}

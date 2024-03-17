@@ -9,7 +9,7 @@
        {% with last_topic_news.0 as news %}
       <div class="item">
         <div class="img img-cover th-250">
-          <img src="/static/img/news/{{ news.id }}.png?{{ today|date:"u" }}" alt="">
+          <img src="/static/img/news/{{ news.id }}.png" alt="">
         </div>
         <div class="content pt-20 pb-20">
           <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">

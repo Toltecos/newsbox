@@ -1,5 +1,6 @@
 import base64
 import os
+import shutil
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -175,14 +176,19 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 def save_image(folder_name, image_name, base64_string):
     img_path = f"{settings.BASE_DIR}/static/img/{folder_name}/{image_name}.png"
+    img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
     replace_string = "data:image/png;base64,"
     base64_string = base64_string.replace(replace_string, "")
     image_data = base64.b64decode(base64_string)
     with open(img_path, "wb") as fh:
         fh.write(image_data)
+    shutil.copy(img_path, img_path_debug)
 
 
 def delete_image(folder_name, image_name):
     img_path = f"{settings.BASE_DIR}/static/img/{folder_name}/{image_name}.png"
+    img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
     if os.path.isfile(img_path):
+        os.remove(img_path)
+    if os.path.isfile(img_path_debug):
         os.remove(img_path)

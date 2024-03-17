@@ -20,7 +20,7 @@
               {% with index_news.0 as news %}
                 <div class="item">
                   <div class="img img-cover th-330">
-                    <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+                    <img src="/static/img/news/{{ news.id }}.png?{{ today|date:"u" }}" alt="">
                   </div>
                   <div class="content pt-30">
                     <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}"
@@ -69,7 +69,7 @@
                         </div>                    
                     <div class="col-4">
                       <div class="img th-70 img-cover">
-                        <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+                        <img src="/static/img/news/{{ news.id }}.png" alt="">
                       </div>
                     </div>
                     <div class="col-8">
@@ -91,7 +91,7 @@
               {% with topics_last_news.travel.0 as news %}
               <div class="item">
                 <div class="img img-cover th-200">
-                  <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+                  <img src="/static/img/news/{{ news.id }}.png?{{ today|date:"u" }}" alt="">
                 </div>
                 <div class="content pt-20">
                   <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ topic_dict|dict_key:news.topic_id }}</a>

@@ -1450,31 +1450,140 @@ function vote(){
 	//console.log("Vote")
 }
 
+// start-image-redactor
+
+if (!window.Clipboard) {
+    var pasteCatcher = document.createElement("div");
+
+    pasteCatcher.setAttribute("contenteditable", "");
+
+    pasteCatcher.style.display = "none";
+    document.body.appendChild(pasteCatcher);
+
+    pasteCatcher.focus();
+    document.addEventListener("click", function() { pasteCatcher.focus(); });
+}
+window.addEventListener("paste", pasteHandler);
+
+function pasteHandler(e) {
+    if (e.clipboardData) {
+        var items = e.clipboardData.items;
+        if (items) {
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf("image") !== -1) {
+                    var blob = items[i].getAsFile();
+                    var URLObj = window.URL || window.webkitURL;
+                    var source = URLObj.createObjectURL(blob);
+                    createImage(source);
+                }
+            }
+        }
+        } else {
+        setTimeout(checkInput, 1);
+    }
+}
+
+function checkInput() {
+    var child = pasteCatcher.childNodes[0];
+    pasteCatcher.innerHTML = "";
+    if (child) {
+        if (child.tagName === "IMG") {
+            createImage(child.src);
+        }
+    }
+}
+
+
+function createImage(source) {
+    var pastedImage = new Image();
+    pastedImage.onload = function() {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        const newWidth = 1170;
+        const newHeight = pastedImage.height * (newWidth / pastedImage.width);
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        ctx.drawImage(pastedImage, 0, 0, newWidth, newHeight);
+        var resizedImage = canvas.toDataURL();
+        document.getElementById("contenteditable").src = resizedImage;
+        document.getElementById("base64img").value = resizedImage;
+        let imagesrc = document.getElementById("contenteditable").src
+        $("#base64").css("background","url('" + imagesrc + "') top left no-repeat");
+        $("#base64").css("height","" + newHeight + "px");
+        $('#fullsize').html("Roll Up");
+        $('#fullsize').attr("id", "rollup");
+
+    }
+    pastedImage.src = source;
+}
+
+function convertToBase64() {
+    var fileInput = document.getElementById('imageInput');
+    var file = fileInput.files[0];
+
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var base64String = event.target.result;
+        createImage(base64String);
+    };
+    reader.readAsDataURL(file);
+}
+
+// end-image-redactor
+
+
 //--- START Ready
 $(document).ready(function () {
+
+    let imagesrc = document.getElementById("contenteditable").src
+    $("#base64").css("background","url('" + imagesrc + "') center left no-repeat");
+
+    $(document).on('change', ".input-file-span input[type=file]", function () {
+	    let file = this.files[0];
+	    $(this).next().html(file.name);
+    });
+
+    $(document).on('click', "#fullsize", function () {
+        let height = $('#contenteditable').height();
+        $('#base64').height(height - 40);
+        $('#fullsize').html("Roll Up");
+        $('#fullsize').attr("id", "rollup");
+        $('#rollup:focus').css("box-shadow", "none");
+    });
+
+    $(document).on('click', "#rollup", function () {
+        $('#base64').height(210);
+        $('#rollup').html("Full Size");
+        $('#rollup').attr("id", "fullsize");
+        $('#fullsize:focus').css("box-shadow", "none");
+    });
+
+});
+//--- END Ready
+
 	//localStorage["vote"] = 0
 	var i = 0;
-	
+
 	$('#temp').html(localStorage["temp"]);
 	$('#city').html(localStorage["city"]);
 	$('#weather').html(localStorage["weather"]);
-	//$('#icon i').hide();	
+	//$('#icon i').hide();
 	//$('#icon').append(localStorage["icon"]);
-	
-	
+
+
     if (localStorage["vote"] == 1){
 		$(".tc-widget-survey-style1 .ansr-content").html(survey);
 		$(".tc-widget-survey-style1 .btns").hide();
-		$(".tc-widget-survey-style1 .pl-num span").html(localStorage["peoples"]);	
+		$(".tc-widget-survey-style1 .pl-num span").html(localStorage["peoples"]);
 	}
 
 setInterval(function() {
-	
+
 	temp = $('#ww_732d3d52f15bd > div > div.ww_current > div.ww_temp').text();
-	city = $('#ww_732d3d52f15bd > div > div.ww_name').text();	
-	icon = $('#ww_732d3d52f15bd > div > div.ww_current > div.ww_icon > svg').clone();	
+	city = $('#ww_732d3d52f15bd > div > div.ww_name').text();
+	icon = $('#ww_732d3d52f15bd > div > div.ww_current > div.ww_icon > svg').clone();
 	weather = $('#ww_732d3d52f15bd > div > div.ww_current > div.ww_cond').text();
-	
+
 	if (localStorage["temp"] != temp && temp.trim() != ""){
 		localStorage["temp"] = temp;
 		$('#temp').html(temp.trim());
@@ -1490,18 +1599,14 @@ setInterval(function() {
 	if (localStorage["icon"] != icon){
 	localStorage["icon"] = icon;
 	i = 0;
-	}			
+	}
 	if (i < 1 && city.trim() != ""){
-	$('#icon i').hide();	
+	$('#icon i').hide();
 	$('#icon').append(icon);
-	i = 1;	
-	}	
-	color = $('#icon i').css("color");	
+	i = 1;
+	}
+	color = $('#icon i').css("color");
 	$('#icon svg').css("fill",color);
 
-		
+
 }, 500);
-
-
-});
-//--- END Ready

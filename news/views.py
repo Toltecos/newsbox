@@ -1,3 +1,7 @@
+import base64
+import os
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -112,8 +116,12 @@ class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = NewspaperForm
 
     def get_success_url(self):
+        news = Newspaper.objects.latest('id')
+        if "base64img" in self.request.POST and self.request.POST["base64img"]:
+            base64_string = self.request.POST["base64img"]
+            save_image("news", news.id, base64_string)
         set_all_cache("now")
-        return reverse_lazy("news:news-list")
+        return reverse_lazy("news:news-detail", kwargs={"pk": news.id})
 
 
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -121,6 +129,10 @@ class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = NewspaperForm
 
     def get_success_url(self):
+        news = self.get_object()
+        if "base64img" in self.request.POST and self.request.POST["base64img"]:
+            base64_string = self.request.POST["base64img"]
+            save_image("news", news.id, base64_string)
         set_all_cache("now")
         return reverse_lazy("news:news-detail", kwargs={"pk": self.object.pk})
 
@@ -129,6 +141,8 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Newspaper
 
     def get_success_url(self):
+        delete = self.object
+        delete_image("news", delete.id)
         set_all_cache("now")
         return reverse_lazy("news:news-list")
 
@@ -157,3 +171,18 @@ class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
 class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = get_user_model()
     success_url = reverse_lazy("")
+
+
+def save_image(folder_name, image_name, base64_string):
+    img_path = f"{settings.BASE_DIR}/static/img/{folder_name}/{image_name}.png"
+    replace_string = "data:image/png;base64,"
+    base64_string = base64_string.replace(replace_string, "")
+    image_data = base64.b64decode(base64_string)
+    with open(img_path, "wb") as fh:
+        fh.write(image_data)
+
+
+def delete_image(folder_name, image_name):
+    img_path = f"{settings.BASE_DIR}/static/img/{folder_name}/{image_name}.png"
+    if os.path.isfile(img_path):
+        os.remove(img_path)

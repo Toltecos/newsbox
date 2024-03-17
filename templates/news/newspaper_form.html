@@ -12,6 +12,23 @@
           <div class="form-content">
             {% csrf_token %}
             {{ form.as_div }}
+            <label for="image">Image:</label>
+            <!-- img -->
+            <div class="text-uppercase" style="margin:0; padding-right: calc(1% + 20px)">
+            <label class="input-file" style="display: inline-block; width: inherit; vertical-align: top !important;">
+	   	         <input class="btn btn-primary" style="display: inline-block; min-width: 1%" type="file" accept="image/*" id="imageInput" onchange="convertToBase64()">	
+	   	        <span class="input-file-span btn btn-success btn-sm">Select file</span></label>
+              <span style="line-height: 2em; vertical-align: top; padding: 0.1rem 0.1rem 0.1rem 0.5rem;"> 
+                Select an image file or paste from the clipboard in image field
+              </span> 
+              <strong id="arrow" style="font-size: 1.5em; line-height: 2em; vertical-align: bottom">⬇</strong>
+            <a id="fullsize" style="box-shadow: none" class="btn btn-sm btn-primary link-to-page" href="javascript:void(0)">Full Size</a>
+            </div>
+            <textarea id="base64" cols="40" rows="10" placeholder="" style="color: white; width:99%; background: url('/static/img/news/{{ newspaper.id }}.png') top left no-repeat;">IMAGE FIELD</textarea>
+            <input id="base64img" name="base64img" type="hidden" value="">
+            <img id="contenteditable" src="/static/img/news/{{ newspaper.id }}.png?{{ today|date:"u" }}" style="display: none">
+            <img id="done" src="">
+            <!-- end-img -->
           </div>
           <input class="btn btn-success" type="submit" value="Submit">
           <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-primary">Cancel</a>

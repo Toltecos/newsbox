@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="tc-main-post-img img-cover">
-        <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+        <img src="/static/img/news/{{ news.id }}.png?{{ today|date:"u" }}" alt="">
       </div>
       <div class="tc-main-post-content color-000">
         <div class="row">
@@ -97,7 +97,7 @@
                 <div class="swiper-slide">
                   <div class="item">
                     <div class="img img-cover th-180">
-                      <img src="/static/img/news/{{ news.id }}.jpg" alt="">
+                      <img src="/static/img/news/{{ news.id }}.png" alt="">
                     </div>
                     <div class="content pt-20">
                       <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ topic_dict|dict_key:news.topic_id }}</a>

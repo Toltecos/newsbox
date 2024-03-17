@@ -182,7 +182,7 @@ def save_image(folder_name, image_name, base64_string):
     image_data = base64.b64decode(base64_string)
     with open(img_path, "wb") as fh:
         fh.write(image_data)
-    shutil.copy(img_path, img_path_debug)
+    shutil.copy2(img_path, img_path_debug)
 
 
 def delete_image(folder_name, image_name):

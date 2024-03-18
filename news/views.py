@@ -1,6 +1,6 @@
 import base64
 import os
-import shutil
+import subprocess
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -144,13 +144,19 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
     def get_success_url(self):
         delete = self.object
         delete_image("news", delete.id)
-        set_all_cache("now")
+        set_all_cache("after", delete.id)
         return reverse_lazy("news:news-list")
 
 
 class RedactorListView(LoginRequiredMixin, generic.ListView):
     model = get_user_model()
     paginate_by = 10
+    success_url = reverse_lazy("news:redactor-list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        set_all_cache("now")
+        return context
 
 
 class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
@@ -176,19 +182,28 @@ class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 def save_image(folder_name, image_name, base64_string):
     img_path = f"{settings.BASE_DIR}/static/img/{folder_name}/{image_name}.png"
-    img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
     replace_string = "data:image/png;base64,"
     base64_string = base64_string.replace(replace_string, "")
     image_data = base64.b64decode(base64_string)
     with open(img_path, "wb") as fh:
         fh.write(image_data)
-    shutil.copy2(img_path, img_path_debug)
+
+    # debug false
+    if settings.DEBUG is False:
+        img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
+        if os.path.isfile(img_path_debug):
+            os.remove(img_path_debug)
+        command = "python manage.py collectstatic --no-input"
+        subprocess.run(command, shell=True, capture_output=True, text=True)
 
 
 def delete_image(folder_name, image_name):
     img_path = f"{settings.BASE_DIR}/static/img/{folder_name}/{image_name}.png"
-    img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
     if os.path.isfile(img_path):
         os.remove(img_path)
-    if os.path.isfile(img_path_debug):
-        os.remove(img_path)
+
+    # debug false
+    if settings.DEBUG is False:
+        img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
+        if os.path.isfile(img_path_debug):
+            os.remove(img_path_debug)

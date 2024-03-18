@@ -144,7 +144,7 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
     def get_success_url(self):
         delete = self.object
         delete_image("news", delete.id)
-        set_all_cache("after", delete.id)
+        set_all_cache("exclude", delete.id)
         return reverse_lazy("news:news-list")
 
 

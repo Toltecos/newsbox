@@ -26,7 +26,7 @@ def get_cache(key):
 
 
 def set_all_cache(cmd="", exclude_id=None):
-    if cmd == "after":
+    if cmd == "exclude":
         cache_file = f"cache/last_cached.pickle"
         if os.path.isfile(cache_file):
             os.remove(cache_file)
@@ -36,7 +36,7 @@ def set_all_cache(cmd="", exclude_id=None):
 
     if not last_cached or cmd == "now" or last_cached < last_update:
         set_cache("last_update", datetime.datetime.now())
-        if cmd == "after":
+        if cmd == "exclude":
             index_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID).exclude(pk=exclude_id)[:7]
         else:
             index_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID)[:7]
@@ -51,7 +51,7 @@ def set_all_cache(cmd="", exclude_id=None):
                 topic_dict[item["id"]] = item["name"]
             set_cache('topic_dict', topic_dict)
 
-        if cmd == "after":
+        if cmd == "exclude":
             topics_last_news = {
                 topic.name.lower(): Newspaper.objects.filter(topic=topic.id).exclude(pk=exclude_id)[:5]
                 for topic in topic_list

@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% load query_transform %}
+{% load cache %}
+{% block title %}
+  <title> newsBox - Daily News</title>
+{% endblock %}
+
+{% block content %} 
+<!-- ====== start Latest news ====== -->
+<section class="tc-latest-news-style1">
+    <div class="container">
+      <div class="section-content pt-30 pb-30 border-bottom border-1 brd-gray">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+          <a href="{% url "news:news-list" %}"> latest news </a>
+          <i class="la la-angle-right ms-1"></i>
+        </p>
+        <div class="row">
+          <div class="col-lg-5 border-end brd-gray border-1">
+            <div class="tc-post-grid-default">
+              {% with index_news.0 as news %}
+                <div class="item">
+                  <div class="img img-cover th-330">
+                    <img src="/static/img/news/{{ news.id }}.png" alt="">
+                  </div>
+                  <div class="content pt-30">
+                    <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}"
+                       class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ topic_dict|dict_key:news.topic_id }}</a>
+                    <h2 class="title mb-20">
+                      <a href="{% url "news:news-detail" news.id %}">{{ news.title|title }}</a>
+                    </h2>
+                    <div class="text color-999">
+                      {{ news.content|truncatewords:15 }}
+                    </div>
+                    <div class="meta-bot lh-1 mt-40">
+                      <ul class="d-flex">
+                        <li class="date me-5">
+                          <a href="/news/?search_date={{ news.published_date|date:"Y-m-d" }}"><i class="la la-calendar me-2"></i> 
+                            {{ news.published_date|date:"d F Y" }}
+                          </a>
+                        </li>
+                        {% for author in news.publishers.all %}
+                          <li class="author me-5">
+                            <a href="{% url "news:redactor-news-list" author.id %}"><i class="la la-user me-2"></i> by <span class="color-000">
+                               {{ author.first_name }} {{ author.last_name }}
+                            </span></a>
+                            {% empty %}
+                            <p>No authors!</p>
+                          </li> 
+                        {% endfor %}
+                        <!--<li class="comment">
+                          <a href="#"><i class="la la-comment me-2"></i> 55 Comments</a>
+                        </li>-->
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              {% endwith %}
+            </div>
+          </div>
+          <div class="col-lg-4 border-end brd-gray border-1">
+            <div class="tc-post-list-style2">
+              <div class="items">
+                {% for news in index_news|slice:"1:6" %}                
+                  <div class="item{% if forloop.counter == 5 %} border-0{% endif %}">
+                  <div class="row gx-3 align-items-center">
+                      <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                          <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}"
+                       class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ topic_dict|dict_key:news.topic_id }}</a>
+                        </div>                    
+                    <div class="col-4">
+                      <div class="img th-70 img-cover">
+                        <img src="/static/img/news/{{ news.id }}.png" alt="">
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="content">
+
+                        <h5 class="title ltspc--1">
+                          <a href="{% url "news:news-detail" news.id %}" class="hover-underline">{{ news.title|title }}</a>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
+              {% with topics_last_news.travel.0 as news %}
+              <div class="item">
+                <div class="img img-cover th-200">
+                  <img src="/static/img/news/{{ news.id }}.png" alt="">
+                </div>
+                <div class="content pt-20">
+                  <a href="{% url "news:topic-news-list" topic_pk=news.topic_id %}" class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ topic_dict|dict_key:news.topic_id }}</a>
+                  <h5 class="title ltspc--1 mb-10"><a href="{% url "news:news-detail" news.id %}" class="hover-underline">{{ news.title|title }}</a></h5>
+                  <div class="text color-666">
+                    {{ news.content|truncatewords:10 }}
+                  </div>
+                  <div class="meta-bot lh-1 mt-20">
+                    <ul class="d-flex">
+                      <li class="date me-5">
+                        <a href="/news/?search_date={{ news.published_date|date:"Y-m-d" }}"><i class="la la-calendar me-2"></i> {{ news.published_date|date:"d F Y" }}</a>
+                      </li>
+                      <!--<li class="comment">
+                        <a href="#"><i class="la la-comment me-2"></i> 8 </a>
+                      </li>-->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              {% endwith %}
+            </div>
+            <div class="pt-15">
+              <span class="fsz-12px color-999 text-capitalize fst-italic">Related Post</span>
+              {% for news in topics_last_news.travel|slice:"1:" %}
+              <a href="{% url "news:news-detail" news.id %}" class="d-flex my-3 hover-underline">
+                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
+                <h6 class="fsz-16px">
+                  {{ news.title|title }}
+                </h6>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- ====== end Latest news ====== -->  
+  
+  
+<!-- ====== start another-news block-1 ====== -->
+<section class="another-news pt-30">
+<div class="container">
+  <div class="section-content border-bottom border-1 brd-gray">
+    <div class="row">
+    
+      <div class="col-lg-4 pb-30">
+      {% with topics_last_news.politics as last_topic_news %}
+        {% include "includes/index_topic_news.html" %}
+      {% endwith %}
+      </div>
+    
+      <div class="col-lg-4 pb-30">
+      {% with topics_last_news.business as last_topic_news %}
+        {% include "includes/index_topic_news.html" %}
+      {% endwith %}
+      </div>
+    
+      <div class="col-lg-4 pb-30 no-border">
+      {% with topics_last_news.technology as last_topic_news %}
+        {% include "includes/index_topic_news.html" %}
+      {% endwith %}
+      </div>
+    
+    </div>
+  </div>
+</div>
+</section>
+<!-- ====== end another-news block-1 ====== -->
+
+<!-- ====== start another-news block-2 ====== -->
+<section class="another-news pt-30">
+<div class="container">
+  <div class="section-content border-bottom border-1 brd-gray">
+    <div class="row">
+      
+      <div class="col-lg-4 pb-30">
+      {% with topics_last_news.sport as last_topic_news %}
+        {% include "includes/index_topic_news.html" %}
+      {% endwith %}
+      </div>
+
+      <div class="col-lg-4 pb-30">
+      {% with topics_last_news.lifestyle as last_topic_news %}
+        {% include "includes/index_topic_news.html" %}
+      {% endwith %}
+      </div>
+    
+      <div class="col-lg-4 pb-30 no-border">
+      {% with topics_last_news.culture as last_topic_news %}
+        {% include "includes/index_topic_news.html" %}
+      {% endwith %}
+      </div>   
+    
+    </div>
+  </div>
+</div>
+</section>
+<!-- ====== end another-news block-2 ====== -->
+
+<!-- ====== start columnist ====== -->
+<section class="tc-columnist-style1">
+<div class="container">
+  <div class="content pt-40 pb-40">
+    <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">top columnist <i class="la la-angle-right ms-1"></i></p>
+    <div class="columnist-slider1 tc-slider-style1">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="columnist-card d-flex align-items-center">
+              <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                <img src="/static/img/colums/3.png" alt="">
+              </div>
+              <div class="info">
+                <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/3/">
+                  Conor McGregor
+                  </a>
+                </h6>
+                <div class="jop-title">
+                  <small class="fsz-13px color-999">Specialize in</small>
+                  <p class="fsz-13px text-uppercase">Sport, Travel</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="columnist-card d-flex align-items-center">
+              <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                <img src="/static/img/colums/4.png" alt="">
+              </div>
+              <div class="info">
+                <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/4/">
+                  Elon Musk
+                  </a>
+                </h6>
+                <div class="jop-title">
+                  <small class="fsz-13px color-999">Specialize in</small>
+                  <p class="fsz-13px text-uppercase">Business, Technology</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="columnist-card d-flex align-items-center">
+              <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                <img src="/static/img/colums/5.png" alt="">
+              </div>
+              <div class="info">
+                <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/5/">
+                  Denis Villeneuve
+                  </a>
+                </h6>
+                <div class="jop-title">
+                  <small class="fsz-13px color-999">Specialize in</small>
+                  <p class="fsz-13px text-uppercase">Lifestyle, Culture </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="columnist-card d-flex align-items-center">
+              <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                <img src="/static/img/colums/6.png" alt="">
+              </div>
+              <div class="info">
+                <h6 class="name fsz-20px mb-10">
+                  <a href="/news/redactor/6/">
+                    Boris Johnson
+                  </a>
+                </h6>
+                <div class="jop-title">
+                  <small class="fsz-13px color-999">Specialize in</small>
+                  <p class="fsz-13px text-uppercase">Politics, Business</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- arrows -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- ====== end columnist ====== -->
+{% endblock %}

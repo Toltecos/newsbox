@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+   <section class="tc-popular-posts-blog">
+    <div class="container">
+      <div class="content-widgets pt-30 pb-30">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+          <span> Delete Redactor</span>
+          <i class="la la-angle-right ms-1"></i>
+        </p>
+        <h5>Are you sure you want to delete Redactor id:{{ redactor.id }}</h5>
+        <br>     
+        <h4><strong>{{ redactor }} ({{ redactor.first_name }} {{ redactor.last_name }} )</strong>?</h4>
+        <br><br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Yes, delete" class="btn btn-danger" />
+            <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-primary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

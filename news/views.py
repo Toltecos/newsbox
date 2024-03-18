@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -16,7 +17,7 @@ from news.cache import get_cache, set_all_cache
 
 class IndexListView(generic.ListView):
     template_name = "news/index.html"
-    context_object_name = 'index_news'
+    context_object_name = "index_news"
 
     def get_queryset(self):
         queryset = get_cache("index_news")
@@ -56,7 +57,7 @@ class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class NewspaperListView(generic.ListView):
     model = Newspaper
-    context_object_name = 'news_list'
+    context_object_name = "news_list"
     paginate_by = 5
 
     def get_queryset(self):
@@ -68,15 +69,13 @@ class NewspaperListView(generic.ListView):
             )
         search_date = self.request.GET.get("search_date")
         if search_date:
-            return queryset.filter(
-                Q(published_date__icontains=search_date)
-            )
+            return queryset.filter(Q(published_date__icontains=search_date))
         return queryset
 
 
 class TopicNewspaperListView(generic.ListView):
     model = Newspaper
-    context_object_name = 'news_list'
+    context_object_name = "news_list"
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
@@ -92,7 +91,7 @@ class TopicNewspaperListView(generic.ListView):
 
 class RedactorNewspaperListView(generic.ListView):
     model = Newspaper
-    context_object_name = 'news_list'
+    context_object_name = "news_list"
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
@@ -109,7 +108,7 @@ class RedactorNewspaperListView(generic.ListView):
 
 class NewspaperDetailView(generic.DetailView):
     model = Newspaper
-    context_object_name = 'news'
+    context_object_name = "news"
 
 
 class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
@@ -117,7 +116,7 @@ class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = NewspaperForm
 
     def get_success_url(self):
-        news = Newspaper.objects.latest('id')
+        news = Newspaper.objects.latest("id")
         if "base64img" in self.request.POST and self.request.POST["base64img"]:
             base64_string = self.request.POST["base64img"]
             save_image("news", news.id, base64_string)
@@ -190,7 +189,9 @@ def save_image(folder_name, image_name, base64_string):
 
     # debug false
     if settings.DEBUG is False:
-        img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
+        img_path_debug = (
+            f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
+        )
         if os.path.isfile(img_path_debug):
             os.remove(img_path_debug)
         command = "python manage.py collectstatic --no-input"
@@ -204,6 +205,12 @@ def delete_image(folder_name, image_name):
 
     # debug false
     if settings.DEBUG is False:
-        img_path_debug = f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
+        img_path_debug = (
+            f"{settings.BASE_DIR}/staticfiles/img/{folder_name}/{image_name}.png"
+        )
         if os.path.isfile(img_path_debug):
             os.remove(img_path_debug)
+
+
+def error(request, *args, **kwargs):
+    return render(request, "news/error.html")

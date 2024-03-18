@@ -9,8 +9,7 @@ class RedactorFormsTests(TestCase):
 
     def setUp(self) -> None:
         self.redactor = get_user_model().objects.create_user(
-            username="test",
-            password="Password123!"
+            username="test", password="Password123!"
         )
         self.client.force_login(self.redactor)
 
@@ -21,7 +20,7 @@ class RedactorFormsTests(TestCase):
             "password2": "Redactor12test!",
             "first_name": "Test_first",
             "last_name": "Test_last",
-            "years_of_experience": 7
+            "years_of_experience": 7,
         }
         form = RedactorCreationForm(data=form_data)
         self.assertTrue(form.is_valid())
@@ -34,18 +33,15 @@ class RedactorFormsTests(TestCase):
             "password2": "Redactor12test!",
             "first_name": "Test_first",
             "last_name": "Test_last",
-            "years_of_experience": 7
+            "years_of_experience": 7,
         }
 
         self.client.post(reverse("news:redactor-create"), data=form_data)
-        new_redactor = get_user_model().objects.get(
-            username=form_data["username"]
-        )
+        new_redactor = get_user_model().objects.get(username=form_data["username"])
         self.assertEqual(new_redactor.first_name, form_data["first_name"])
         self.assertEqual(new_redactor.last_name, form_data["last_name"])
         self.assertEqual(
-            new_redactor.years_of_experience,
-            form_data["years_of_experience"]
+            new_redactor.years_of_experience, form_data["years_of_experience"]
         )
 
 

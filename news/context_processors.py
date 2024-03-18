@@ -7,8 +7,8 @@ def news_info(request):
     set_all_cache()
 
     info = get_cache("info")
-    topic_list = get_cache('topic_list')
-    topic_dict = get_cache('topic_dict')
+    topic_list = get_cache("topic_list")
+    topic_dict = get_cache("topic_dict")
     topics_last_news = get_cache("topics_last_news")
 
     num_visits = request.session.get("num_visits", 0)
@@ -21,5 +21,5 @@ def news_info(request):
         "topics_last_news": topics_last_news,
         "info": info,
         "num_visits": request.session.get("num_visits"),
-        'today': today,
+        "today": today,
     }

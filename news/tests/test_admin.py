@@ -7,14 +7,11 @@ class AdminSiteTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.admin_user = get_user_model().objects.create_superuser(
-            username="admin",
-            password="Test5admin!"
+            username="admin", password="Test5admin!"
         )
         self.client.force_login(self.admin_user)
         self.redactor = get_user_model().objects.create_user(
-            username="test",
-            password="Test5test!",
-            years_of_experience="5"
+            username="test", password="Test5test!", years_of_experience="5"
         )
 
     def test_redactor_years_of_experience_listed(self):

@@ -37,21 +37,9 @@ url_news = [
         RedactorNewspaperListView.as_view(),
         name="redactor-news-list",
     ),
-    path(
-        "news/create/",
-        NewspaperCreateView.as_view(),
-        name="news-create"
-    ),
-    path(
-        "news/<int:pk>/update/",
-        NewspaperUpdateView.as_view(),
-        name="news-update"
-    ),
-    path(
-        "news/<int:pk>/delete/",
-        NewspaperDeleteView.as_view(),
-        name="news-delete"
-    ),
+    path("news/create/", NewspaperCreateView.as_view(), name="news-create"),
+    path("news/<int:pk>/update/", NewspaperUpdateView.as_view(), name="news-update"),
+    path("news/<int:pk>/delete/", NewspaperDeleteView.as_view(), name="news-delete"),
 ]
 
 url_topic = [
@@ -78,21 +66,9 @@ url_topic = [
 ]
 
 url_redactor = [
-    path(
-        "redactors/",
-        RedactorListView.as_view(),
-        name="redactor-list"
-    ),
-    path(
-        "redactors/<int:pk>/",
-        RedactorDetailView.as_view(),
-        name="redactor-detail"
-    ),
-    path(
-        "redactors/create/",
-        RedactorCreateView.as_view(),
-        name="redactor-create"
-    ),
+    path("redactors/", RedactorListView.as_view(), name="redactor-list"),
+    path("redactors/<int:pk>/", RedactorDetailView.as_view(), name="redactor-detail"),
+    path("redactors/create/", RedactorCreateView.as_view(), name="redactor-create"),
     path(
         "redactors/<int:pk>/update/",
         RedactorUpdateView.as_view(),

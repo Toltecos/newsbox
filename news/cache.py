@@ -37,23 +37,27 @@ def set_all_cache(cmd="", exclude_id=None):
     if not last_cached or cmd == "now" or last_cached < last_update:
         set_cache("last_update", datetime.datetime.now())
         if cmd == "exclude":
-            index_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID).exclude(pk=exclude_id)[:7]
+            index_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID).exclude(
+                pk=exclude_id
+            )[:7]
         else:
             index_news = Newspaper.objects.exclude(topic=TRAVEL_TOPIC_ID)[:7]
         set_cache("index_news", index_news)
 
         topic_list = Topic.objects.all()
-        set_cache('topic_list', topic_list)
+        set_cache("topic_list", topic_list)
 
         topic_dict = dict()
         for item in topic_list.values():
             for key, value in item.items():
                 topic_dict[item["id"]] = item["name"]
-            set_cache('topic_dict', topic_dict)
+            set_cache("topic_dict", topic_dict)
 
         if cmd == "exclude":
             topics_last_news = {
-                topic.name.lower(): Newspaper.objects.filter(topic=topic.id).exclude(pk=exclude_id)[:5]
+                topic.name.lower(): Newspaper.objects.filter(topic=topic.id).exclude(
+                    pk=exclude_id
+                )[:5]
                 for topic in topic_list
             }
         else:
@@ -66,7 +70,7 @@ def set_all_cache(cmd="", exclude_id=None):
         info = {
             "num_news": Newspaper.objects.count(),
             "num_redactors": get_user_model().objects.count(),
-            "num_topics": Topic.objects.count()
+            "num_topics": Topic.objects.count(),
         }
         set_cache("info", info)
 

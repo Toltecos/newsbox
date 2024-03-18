@@ -27,25 +27,16 @@ class RedactorCreationForm(UserCreationForm):
         )
 
     def clean_years_of_experience(self):
-        return validate_years_of_experience(
-            self.cleaned_data["years_of_experience"]
-        )
+        return validate_years_of_experience(self.cleaned_data["years_of_experience"])
 
 
 class RedactorUpdateForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = [
-            "username",
-            "years_of_experience",
-            "first_name",
-            "last_name"
-        ]
+        fields = ["username", "years_of_experience", "first_name", "last_name"]
 
     def clean_license_number(self):
-        return validate_years_of_experience(
-            self.cleaned_data["years_of_experience"]
-        )
+        return validate_years_of_experience(self.cleaned_data["years_of_experience"])
 
 
 def validate_years_of_experience(years_of_experience):
@@ -62,7 +53,5 @@ class SearchForm(forms.Form):
             required=False,
             label="",
             initial=search_query,
-            widget=forms.TextInput(
-                attrs={"placeholder": f"Search by {search_field}"}
-            ),
+            widget=forms.TextInput(attrs={"placeholder": f"Search by {search_field}"}),
         )

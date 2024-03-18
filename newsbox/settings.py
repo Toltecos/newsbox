@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 import sys
 from pathlib import Path
@@ -93,7 +94,7 @@ DATABASES = {
 }
 
 db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+DATABASES["default"].update(db_from_env)
 
 # DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -138,9 +139,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 
 # Default primary key field type
@@ -153,6 +152,5 @@ AUTH_USER_MODEL = "news.Redactor"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880

@@ -14,7 +14,7 @@ def query_transform(request, **kwargs):
     return updated.urlencode()
 
 
-@register.filter(name='dict_key')
+@register.filter(name="dict_key")
 def dict_key(dictionary, key):
     if dictionary is not None and isinstance(dictionary, dict):
         return dictionary.get(key, "")
